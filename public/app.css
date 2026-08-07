@@ -1,0 +1,144 @@
+            /* hide content + the auth control until auth state is known (prevents signed-out UI flash on reload) */
+            body.booting main,
+            body.booting .colophon {
+                display: none;
+            }
+            /* Favor the system-dark look in explicit dark too: press tints .ledger/.panel with --bg-soft only
+   under [data-theme=dark], which makes explicit dark diverge from system dark. Neutralize it. */
+            :root[data-theme="dark"] .ledger,
+            :root[data-theme="dark"] .panel,
+            :root[data-theme="dark"] .frame,
+            :root[data-theme="dark"] .readout,
+            :root[data-theme="dark"] .action-card {
+                background: var(--bg);
+            }
+            body.booting #authArea {
+                visibility: hidden;
+            }
+            /* Kill Press's auto-injected top AJAX progress bar — htmx requests here
+               are small partial swaps; the flashing 2px bar is more noise than signal. */
+            .progress-bar {
+                display: none !important;
+            }
+            /* water-lab additions — kept in the PRESS idiom */
+            .cdot {
+                display: inline-block;
+                width: 9px;
+                height: 9px;
+                background: var(--c);
+                margin-right: 6px;
+                vertical-align: middle;
+                border: var(--border) solid var(--text);
+            }
+            .water-panel {
+                border-top: 3px solid var(--accent-water, var(--text));
+            }
+            .gap {
+                gap: var(--space-2);
+            }
+            .two-col {
+                display: grid;
+                gap: var(--space-4);
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            }
+            .params-grid {
+                display: grid;
+                gap: var(--space-4) var(--space-5);
+                grid-template-columns: 1fr 1fr;
+            }
+            .tot-cell {
+                border: var(--border) solid var(--rule);
+                background: var(--bg-soft);
+                padding: var(--space-2) var(--space-3);
+            }
+            .lead {
+                font-size: 1.05rem;
+            }
+            /* small inline edit (✎) button next to a custom drop's name */
+            .conc-edit {
+                padding: 0 7px;
+                line-height: 1.6;
+            }
+            /* The custom-drop editor's fields are plain rows of the concentrate ledger (no nested table),
+   tinted soft so the expanded drop reads as the one being edited. */
+            .ledger tbody tr.md-row th,
+            .ledger tbody tr.md-row td {
+                background: var(--bg-soft);
+            }
+            /* SCA zone is a faint reference backdrop, not a target to hit — muted grey fill, no crosshair.
+   Modern specialty water runs lower alkalinity than SCA's box, so it reads as context only. */
+            #chemChart .zone {
+                fill: color-mix(in srgb, var(--text) 5%, transparent);
+                stroke: var(--rule);
+                stroke-opacity: 0.7;
+                stroke-dasharray: 3 3;
+            }
+            #chemChart .zone-lbl {
+                fill: var(--text-2);
+                font-size: 8px;
+                opacity: 0.75;
+            }
+            /* logbook recipe groups: the ★ Favorites group collapses when empty, so "My recipes" sits flush
+   at the top; the inter-group gap only appears between groups that are actually showing. */
+            #favList:empty {
+                display: none;
+            }
+            #favList:not(:empty) + #recList {
+                margin-top: var(--space-4);
+            }
+            @media (max-width: 48rem) {
+                .two-col,
+                .params-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            /* press input fixes: (1) soften the border — press uses var(--text) (pure black);
+               (2) Safari ignores .input/.ledger-field chrome on <select> (native), so force a
+               custom appearance + our own chevron. Most app fields live in .ledger tables, which
+               press styles via a high-specificity rule — so we mirror those selectors too. */
+            input[type="number"].input,
+            input[type="text"].input,
+            input[type="search"].input,
+            textarea.input,
+            select.input,
+            .input,
+            .ledger input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not(.qty-value),
+            .ledger select,
+            .ledger textarea,
+            .product-edit input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not(.qty-value),
+            .product-edit select,
+            .product-edit textarea {
+                border-color: color-mix(in srgb, var(--text) 40%, var(--bg));
+            }
+            select.input,
+            .ledger select,
+            .product-edit select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right var(--space-3) center;
+                padding-right: calc(var(--space-3) * 2 + 0.9em);
+            }
+
+            /* Gear favorite toggle — bare star (no box), matching the logbook score stars.
+               syncFavBtn() paints the Press star icon + on/off colour. */
+            .gear-fav {
+                background: none;
+                border: 0;
+                padding: 2px;
+                margin: 0;
+                cursor: pointer;
+                line-height: 0;
+                font-size: 1.5rem;
+                color: var(--rule);
+                align-self: center;
+            }
+            .gear-fav.on { color: var(--accent); }
+            .gear-fav:disabled { opacity: 0.4; cursor: default; }
+            .gear-fav .icon.fill { fill: currentColor; }
+            /* Insights chart: the SVG (viewBox 340×230, no intrinsic size) fills its
+               aspect-ratio-reserved box exactly, so the chart slot holds its height
+               from first paint — no shift when it swaps in after /api/brews. */
+            #insightsChart svg { display: block; width: 100%; height: auto; }

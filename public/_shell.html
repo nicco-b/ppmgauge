@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ppmgauge — brew water for coffee</title>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link
+            rel="stylesheet"
+            href="https://press.gldn.workers.dev/v1/press.css?v=2026-06-04-dotted3"
+        />
+        <script
+            src="https://press.gldn.workers.dev/v1/press.js?v=2026-06-03-gear-icons"
+            defer
+        ></script>
+        <!-- htmx (vendored, self-hosted) — powers the server-rendered feed and the
+             progressive migration of the logbook lists/CRUD off hand-written JS. The
+             water calculator stays a JS island. -->
+        <script src="/htmx.min.js?v=2.0.4" defer></script>
+        <link rel="stylesheet" href="/app.css?v=3" />
+    </head>
+    <body hx-boost="false" class="booting" data-page="__PAGE__" data-auth="__AUTH__">
+        <header class="bridge">
+            <a
+                href="/"
+                data-section="feed"
+                class="callsign"
+                style="text-decoration: none; color: inherit"
+                aria-current="page"
+                >ppmgauge</a
+            >
+            <ul class="nav-list" id="sectionNav">
+                <li>
+                    <a href="/water" data-section="build" aria-current="false"
+                        >Water</a
+                    >
+                </li>
+                <li>
+                    <a href="/logbook" data-section="log" aria-current="false"
+                        >Logbook</a
+                    >
+                </li>
+                <li><a href="/library">Library</a></li>
+            </ul>
+            <span
+                id="authArea"
+                class="bridge-end cluster gap"
+                style="align-items: center"
+            ></span>
+        </header>
+        <main class="deck"><!--BODY--></main>
+        <!-- WELCOME / first-run display-name gate (replaces main; no popup) -->
+        <section
+            id="welcomeView"
+            style="
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+                background: var(--bg-0, #fff);
+                overflow: auto;
+                padding: var(--space-5) var(--space-4);
+            "
+        >
+            <div style="max-width: 32rem; margin: 0 auto">
+                <form id="welcomeForm" class="deck">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">
+                                    <span
+                                        class="cluster"
+                                        style="
+                                            justify-content: space-between;
+                                            align-items: baseline;
+                                            gap: var(--space-3);
+                                        "
+                                    >
+                                        <span>Welcome to ppmgauge</span
+                                        ><span class="eyebrow"
+                                            >one quick thing</span
+                                        >
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td
+                                    colspan="2"
+                                    class="left"
+                                    style="border-left: 4px solid var(--rule)"
+                                >
+                                    <span class="help"
+                                        >Pick a display name — it's how you'll
+                                        show up in the community feed when you
+                                        share recipes, brews and beans. You can
+                                        change it later in Account.</span
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Display name</th>
+                                <td>
+                                    <input
+                                        class="input"
+                                        id="welcomeName"
+                                        maxlength="80"
+                                        placeholder="e.g. nicco"
+                                        autocomplete="nickname"
+                                        style="width: 100%"
+                                    />
+                                </td>
+                            </tr>
+                            <tr class="action">
+                                <td
+                                    colspan="2"
+                                    style="border-left: 4px solid var(--rule)"
+                                >
+                                    <span
+                                        class="cluster"
+                                        style="justify-content: flex-end"
+                                        ><button
+                                            class="button"
+                                            type="submit"
+                                            id="welcomeSave"
+                                        >
+                                            Continue
+                                        </button></span
+                                    >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <div id="welcomeMsg" style="margin-top: var(--space-4)"></div>
+            </div>
+        </section>
+
+        <!-- SIGN-IN VIEW (replaces main; no popup) -->
+        <section
+            id="signinView"
+            class="deck"
+            style="display: none; max-width: 32rem"
+        >
+            <form id="signinForm">
+                <table class="ledger">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="left">
+                                <span
+                                    class="cluster"
+                                    style="
+                                        justify-content: space-between;
+                                        align-items: baseline;
+                                        gap: var(--space-3);
+                                    "
+                                >
+                                    <span
+                                        >Sign in
+                                        <span class="data"
+                                            >/ create account</span
+                                        ></span
+                                    >
+                                    <span class="eyebrow">ppmgauge</span>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td
+                                colspan="2"
+                                class="left"
+                                style="border-left: 4px solid var(--rule)"
+                            >
+                                <span class="help"
+                                    >Enter your email and we'll send a one-time
+                                    sign-in link — no password. New here? The
+                                    link creates your account. The first email
+                                    may land in spam (we're a new domain) — mark
+                                    it "not spam" so the next ones arrive.</span
+                                >
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>
+                                <input
+                                    class="input"
+                                    type="email"
+                                    id="signinEmail"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                    style="width: 100%"
+                                />
+                            </td>
+                        </tr>
+                        <tr class="action">
+                            <td
+                                colspan="2"
+                                style="border-left: 4px solid var(--rule)"
+                            >
+                                <span
+                                    class="cluster"
+                                    style="
+                                        justify-content: space-between;
+                                        align-items: center;
+                                    "
+                                >
+                                    <button
+                                        class="button secondary sm"
+                                        type="button"
+                                        id="signinBack"
+                                    >
+                                        &larr; Back
+                                    </button>
+                                    <button
+                                        class="button"
+                                        type="submit"
+                                        id="signinSend"
+                                    >
+                                        Send sign-in link
+                                    </button>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+            <div id="signinMsg" style="margin-top: var(--space-4)"></div>
+        </section>
+
+        <footer class="colophon">
+            <span class="numeric">ppmgauge.com</span>
+        </footer>
+        <!--SCRIPTS-->
+    </body>
+</html>

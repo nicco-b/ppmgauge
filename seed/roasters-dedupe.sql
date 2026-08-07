@@ -1,0 +1,6 @@
+-- Dedupe roasters: remove batch-2 -2 slugs that collided with canonical roasters.
+-- Delete their child links + lots first (FK has no cascade), then the roaster rows.
+DELETE FROM ref_coffee_varieties WHERE coffee_id IN (SELECT id FROM ref_coffees WHERE roaster_id IN ('flight-2','friedhats-2','fritz-2','gardelli-2','george-howell-2','glitch-2','hasbean-2','huckleberry-2','la-cabra-2','manhattan-2','methodical-2','ona-2','proud-mary-2','roundhill-2','the-barn-2','coffee-collective-2'));
+DELETE FROM ref_coffee_flavors WHERE coffee_id IN (SELECT id FROM ref_coffees WHERE roaster_id IN ('flight-2','friedhats-2','fritz-2','gardelli-2','george-howell-2','glitch-2','hasbean-2','huckleberry-2','la-cabra-2','manhattan-2','methodical-2','ona-2','proud-mary-2','roundhill-2','the-barn-2','coffee-collective-2'));
+DELETE FROM ref_coffees WHERE roaster_id IN ('flight-2','friedhats-2','fritz-2','gardelli-2','george-howell-2','glitch-2','hasbean-2','huckleberry-2','la-cabra-2','manhattan-2','methodical-2','ona-2','proud-mary-2','roundhill-2','the-barn-2','coffee-collective-2');
+DELETE FROM ref_roasters WHERE id IN ('flight-2','friedhats-2','fritz-2','gardelli-2','george-howell-2','glitch-2','hasbean-2','huckleberry-2','la-cabra-2','manhattan-2','methodical-2','ona-2','proud-mary-2','roundhill-2','the-barn-2','coffee-collective-2');

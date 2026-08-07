@@ -1,0 +1,51 @@
+            <section class="section" id="section-feed">
+                <div
+                    id="feedIntro"
+                    class="signal info"
+                    style="margin-bottom: var(--space-4)"
+                >
+                    <b>Welcome to ppmgauge</b> — dial in your brew water by the
+                    numbers (TONIK/JAMM/LYLAC &amp; more), save recipes, and
+                    keep a tasting log.
+                    <span class="data" style="display: block; margin-top: 4px"
+                        >New here? <a href="/water">Build a water</a> to try it,
+                        or sign in (top-right) to save recipes and log brews —
+                        it's a one-time email link, no password.</span
+                    >
+                </div>
+                <div
+                    id="feedList"
+                    hx-get="/partials/feed"
+                    hx-trigger="load, every 60s"
+                    hx-swap="innerHTML"
+                >
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">
+                                    Feed
+                                    <span class="data">community activity</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th><span class="data">···</span></th>
+                                <td>
+                                    <span class="help"
+                                        >Loading recent activity…</span
+                                    >
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span class="data">···</span></th>
+                                <td class="data">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <th><span class="data">···</span></th>
+                                <td class="data">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>

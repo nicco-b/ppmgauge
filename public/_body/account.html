@@ -1,0 +1,140 @@
+        <section
+            id="accountView"
+            class="deck"
+            style="max-width: 34rem"
+        >
+            <div class="section">
+                <span class="eyebrow">account</span>
+                <h1 style="margin: 0 0 var(--space-4)">Your account</h1>
+
+                <form id="acctForm">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">Profile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Email</th>
+                                <td>
+                                    <input
+                                        class="input"
+                                        id="acctEmail"
+                                        disabled
+                                        style="width: 100%"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Display name</th>
+                                <td>
+                                    <input
+                                        class="input"
+                                        id="acctName"
+                                        placeholder="optional"
+                                        style="width: 100%"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Member since</th>
+                                <td class="data" id="acctJoined"></td>
+                            </tr>
+                            <tr>
+                                <th>Appearance</th>
+                                <td>
+                                    <button
+                                        class="button sm secondary"
+                                        data-theme-toggle
+                                        aria-label="cycle theme"
+                                    >
+                                        THEME ·
+                                        <span data-theme-label>system</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="action">
+                                <th colspan="2">
+                                    <button
+                                        class="button sm"
+                                        id="acctSave"
+                                        type="button"
+                                        hx-put="/api/account"
+                                        hx-swap="none"
+                                        hx-vals="js:{display_name:(document.getElementById('acctName')||{}).value||''}"
+                                    >
+                                        Save
+                                    </button>
+                                </th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+
+                <table class="ledger" style="margin-top: var(--space-4)">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="left">Your library</th>
+                        </tr>
+                    </thead>
+                    <tbody id="acctStats"></tbody>
+                </table>
+
+                <table class="ledger" style="margin-top: var(--space-4)">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="left">Danger zone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2" class="data">
+                                Delete your account &amp; all your data —
+                                permanent.
+                            </td>
+                        </tr>
+                        <tr class="action">
+                            <th colspan="2">
+                                <button
+                                    class="button sm"
+                                    id="acctDelete"
+                                    type="button"
+                                    style="
+                                        background: var(--negative);
+                                        border-color: var(--negative);
+                                        color: #fff;
+                                    "
+                                >
+                                    Delete account
+                                </button>
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div
+                    class="cluster"
+                    style="
+                        justify-content: space-between;
+                        margin-top: var(--space-4);
+                    "
+                >
+                    <button
+                        class="button secondary sm"
+                        type="button"
+                        id="acctBack"
+                    >
+                        &larr; Back
+                    </button>
+                    <button
+                        class="button secondary sm"
+                        type="button"
+                        id="acctLogout"
+                    >
+                        Sign out
+                    </button>
+                </div>
+            </div>
+        </section>
+

@@ -1,0 +1,34 @@
+# Cloudflare Workers Assets honours this file (same syntax as Pages).
+# Static, content-stable binaries get a hard immutable cache so the browser
+# stops revalidating them on every navigation (the Assets default is
+# max-age=0, must-revalidate). The app's HTML + any JSON are deliberately
+# NOT matched here, so they keep that default and deploys stay instant.
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+/*.gif
+  Cache-Control: public, max-age=31536000, immutable
+/*.avif
+  Cache-Control: public, max-age=31536000, immutable
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+/*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+/*.otf
+  Cache-Control: public, max-age=31536000, immutable
+
+# Favicon is static but not fingerprinted — a week is plenty, not forever.
+/favicon.svg
+  Cache-Control: public, max-age=604800
+
+# Vendored htmx — content-stable; busted via the ?v= query on the script src.
+/htmx.min.js
+  Cache-Control: public, max-age=31536000, immutable

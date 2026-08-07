@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="5" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <!-- gauge track -->
+  <path d="M6 21 A 10 10 0 0 1 26 21" fill="none" stroke="#c9c9c9" stroke-width="3" stroke-linecap="round"/>
+  <!-- in-range fill -->
+  <path d="M6 21 A 10 10 0 0 1 16 11" fill="none" stroke="#0B3D91" stroke-width="3" stroke-linecap="round"/>
+  <!-- needle + hub -->
+  <line x1="16" y1="21" x2="22.5" y2="14.5" stroke="#003B5C" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="16" cy="21" r="2.2" fill="#003B5C"/>
+</svg>

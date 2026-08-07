@@ -1,0 +1,12 @@
+# Cloudflare / Wrangler local state
+.wrangler/
+.dev.vars
+.dev.vars.local
+!.dev.vars.example
+
+# deps / env / os
+node_modules/
+.env
+.env.*
+*.log
+.DS_Store

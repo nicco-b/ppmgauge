@@ -1,0 +1,944 @@
+            <section id="section-build">
+                <!-- Recipe ledger: live summary of the current water; fills in when a recipe is
+         loaded, goes "unsaved edits" the moment you change anything, and saves/updates. -->
+                <section
+                    id="setupSection"
+                    style="margin-bottom: var(--space-5)"
+                >
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">
+                                    <span id="setupTitle">Save water </span>
+                                    <span id="setupStatus"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Recipe name</th>
+                                <td>
+                                    <input
+                                        class="input"
+                                        id="recName"
+                                        placeholder="name this recipe"
+                                        style="width: 100%"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    colspan="2"
+                                    class="left"
+                                    id="saveSummary"
+                                    style="border-left: 4px solid var(--rule)"
+                                ></td>
+                            </tr>
+                            <tr class="action">
+                                <td
+                                    colspan="2"
+                                    style="border-left: 4px solid var(--rule)"
+                                >
+                                    <span
+                                        class="cluster gap"
+                                        id="saveActions"
+                                    ></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="margin-bottom: var(--space-3)">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">
+                                    Starting water
+                                    <button
+                                        class="hint"
+                                        type="button"
+                                        data-hint="The water you brew with before any concentrate. Distilled / RO is mineral-free (the default — leaves the numbers unchanged). Brewing with tap or spring? Pick Custom and enter its measured GH/KH; the chemistry readout then shows your TOTAL water (starting water + drops)."
+                                    >
+                                        ?
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Source</th>
+                                <td>
+                                    <select
+                                        class="input"
+                                        id="swType"
+                                        style="width: 100%"
+                                    >
+                                        <option value="ro">
+                                            Distilled / RO — mineral-free
+                                            (default)
+                                        </option>
+                                        <option value="soft">
+                                            Soft tap — ~40 GH / 30 KH
+                                        </option>
+                                        <option value="hard">
+                                            Hard tap — ~120 GH / 80 KH
+                                        </option>
+                                        <option value="spring">
+                                            Spring — ~80 GH / 50 KH
+                                        </option>
+                                        <option value="custom">
+                                            Custom — enter measured GH/KH
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr id="swCustomRow" style="display: none">
+                                <th>Measured</th>
+                                <td>
+                                    <span
+                                        class="cluster gap"
+                                        style="
+                                            flex-wrap: wrap;
+                                            align-items: center;
+                                        "
+                                    >
+                                        <span
+                                            >GH
+                                            <input
+                                                class="input numeric"
+                                                id="swGH"
+                                                type="number"
+                                                min="0"
+                                                step="1"
+                                                style="width: 5rem"
+                                        /></span>
+                                        <span
+                                            >KH
+                                            <input
+                                                class="input numeric"
+                                                id="swKH"
+                                                type="number"
+                                                min="0"
+                                                step="1"
+                                                style="width: 5rem"
+                                        /></span>
+                                        <select
+                                            class="input"
+                                            id="swHard"
+                                            style="width: auto"
+                                        >
+                                            <option value="ca">
+                                                hardness: calcium
+                                            </option>
+                                            <option value="mg">
+                                                magnesium
+                                            </option>
+                                            <option value="both">both</option>
+                                        </select>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- WATERS — water A always; B and C added on demand (max 3). No tabs. -->
+                <div id="waterList">
+                    <div
+                        class="water-card"
+                        data-wkey="s"
+                        style="margin-bottom: var(--space-4)"
+                    >
+                        <div id="wp-s"></div>
+                    </div>
+                    <div
+                        class="water-card"
+                        data-wkey="a"
+                        style="margin-bottom: var(--space-4)"
+                        hidden
+                    >
+                        <div id="wp-a"></div>
+                    </div>
+                    <div
+                        class="water-card"
+                        data-wkey="b"
+                        style="margin-bottom: var(--space-4)"
+                        hidden
+                    >
+                        <div id="wp-b"></div>
+                    </div>
+                    <button
+                        id="addWater"
+                        class="button secondary sm"
+                        type="button"
+                    >
+                        + Add water
+                    </button>
+                </div>
+
+            </section>
+            <!-- /section-build -->
+
+            <!-- CHEMISTRY (top-nav section) -->
+            <!-- THE BREW (gear + pour-over; shown alongside the build view) -->
+            <section id="panel-brew" style="margin-top: var(--space-5)">
+                <section id="brewMethodPanel">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">Brew method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Brewer</th>
+                                <td>
+                                    <span
+                                        class="cluster gap"
+                                        style="align-items: stretch"
+                                        ><select
+                                            class="input"
+                                            id="bmBrewer"
+                                            style="flex: 1; min-width: 0"
+                                        ></select
+                                        ><button
+                                            class="gear-fav"
+                                            id="bmBrewerFav"
+                                            type="button"
+                                            aria-pressed="false"
+                                            title="Pick gear first"
+                                            disabled
+                                        >
+                                            ☆
+                                        </button></span
+                                    >
+                                    <div
+                                        class="data"
+                                        id="bmBrewerNote"
+                                        style="margin-top: 6px"
+                                    ></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Filter</th>
+                                <td>
+                                    <span
+                                        class="cluster gap"
+                                        style="align-items: stretch"
+                                        ><select
+                                            class="input"
+                                            id="bmFilter"
+                                            style="flex: 1; min-width: 0"
+                                        ></select
+                                        ><button
+                                            class="gear-fav"
+                                            id="bmFilterFav"
+                                            type="button"
+                                            aria-pressed="false"
+                                            title="Pick gear first"
+                                            disabled
+                                        >
+                                            ☆
+                                        </button></span
+                                    >
+                                    <div
+                                        class="data"
+                                        id="bmFilterNote"
+                                        style="margin-top: 6px"
+                                    ></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Grinder</th>
+                                <td>
+                                    <span
+                                        class="cluster gap"
+                                        style="align-items: stretch"
+                                        ><select
+                                            class="input"
+                                            id="bmGrinder"
+                                            style="flex: 1; min-width: 0"
+                                        ></select
+                                        ><button
+                                            class="gear-fav"
+                                            id="bmGrinderFav"
+                                            type="button"
+                                            aria-pressed="false"
+                                            title="Pick gear first"
+                                            disabled
+                                        >
+                                            ☆
+                                        </button></span
+                                    >
+                                    <div
+                                        class="data"
+                                        id="bmGrinderNote"
+                                        style="margin-top: 6px"
+                                    ></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Grind setting</th>
+                                <td>
+                                    <input
+                                        class="input"
+                                        id="bmGrind"
+                                        placeholder="e.g. 22 clicks · medium-fine"
+                                        style="width: 100%"
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Dose &amp; ratio</th>
+                                <td>
+                                    <span
+                                        class="cluster gap"
+                                        style="
+                                            align-items: center;
+                                            flex-wrap: wrap;
+                                        "
+                                    >
+                                        <span
+                                            class="input-group"
+                                            style="width: 6.5rem"
+                                            ><input
+                                                class="input numeric"
+                                                type="number"
+                                                id="bmDose"
+                                                min="0"
+                                                step="0.5"
+                                                value="18"
+                                                placeholder="18"
+                                            /><span class="input-addon"
+                                                >g</span
+                                            ></span
+                                        >
+                                        <span class="data">· 1 :</span>
+                                        <span
+                                            class="input-group"
+                                            style="width: 5.5rem"
+                                            ><input
+                                                class="input numeric"
+                                                type="number"
+                                                id="bmRatio"
+                                                min="0"
+                                                step="0.5"
+                                                value="16"
+                                                placeholder="16"
+                                        /></span>
+                                        <span class="data"
+                                            >→ <b id="bmWater">—</b> g
+                                            water</span
+                                        >
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- POUR SCHEDULE — each pour is its own .ledger (water · time · temp · agitation · note) -->
+                <section class="section" id="pourPanel">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="left">
+                                    <span
+                                        class="cluster gap"
+                                        style="
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            flex-wrap: wrap;
+                                        "
+                                    >
+                                        <span>Pour schedule</span>
+                                        <button
+                                            class="button sm secondary"
+                                            id="pourEdit"
+                                            type="button"
+                                        >
+                                            Edit
+                                        </button>
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="pourRows"></tbody>
+                    </table>
+                    <!-- Suggestions for the per-pour Method field (free text + datalist). -->
+                    <datalist id="agitDL">
+                        <option value="No agitation"></option>
+                        <option value="Gentle swirl"></option>
+                        <option value="Swirl"></option>
+                        <option value="Rao spin"></option>
+                        <option value="Stir"></option>
+                        <option value="Spiral pour"></option>
+                        <option value="Center pour"></option>
+                        <option value="Pulse pour"></option>
+                        <option value="Swirl + tap"></option>
+                    </datalist>
+                </section>
+
+                <!-- POST-BREW DROPS — minerals stirred into the finished cup (dosed g/L of brewed volume) -->
+                <section class="section" id="postBrewPanel">
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="3" class="left">
+                                    <span
+                                        class="cluster"
+                                        style="
+                                            justify-content: space-between;
+                                            align-items: baseline;
+                                            gap: var(--space-3);
+                                        "
+                                    >
+                                        <span
+                                            >Post-brew drops
+                                            <button
+                                                class="hint"
+                                                type="button"
+                                                data-hint="Drops stirred into the finished cup, dosed as g/L of the brewed volume. They shift what you taste without touching extraction — the In-cup readout below shows the result."
+                                            >
+                                                ?
+                                            </button></span
+                                        >
+                                        <span class="data"
+                                            >Σ <b id="pb_totg">0</b> g ·
+                                            <b id="pb_totd">0</b> drops</span
+                                        >
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="left">drop</th>
+                                <th class="numeric">dose</th>
+                                <th class="numeric">drops</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postBrewRows"></tbody>
+                    </table>
+                    <table
+                        class="ledger"
+                        id="inCupTable"
+                        style="margin-top: var(--space-3); display: none"
+                    >
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="left">
+                                    In cup
+                                    <span class="data">after post-brew</span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="left">hardness · GH</th>
+                                <th class="left">alkalinity · KH</th>
+                                <th class="left">TDS</th>
+                                <th class="left">Mg:Ca molar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td
+                                    class="left"
+                                    style="border-left: 4px solid var(--rule)"
+                                >
+                                    <b id="cupGH">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left">
+                                    <b id="cupKH">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left">
+                                    <b id="cupTDS">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left" id="cupMgCa">–</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+            <!-- /panel-brew -->
+
+            <section id="panel-chem">
+                <section>
+                    <table class="ledger">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="left">
+                                    <div
+                                        class="cluster gap"
+                                        style="
+                                            justify-content: space-between;
+                                            align-items: center;
+                                        "
+                                    >
+                                        <span
+                                            class="cluster gap"
+                                            style="align-items: center"
+                                            ><label
+                                                for="chemSource"
+                                                style="
+                                                    margin: 0;
+                                                    font-weight: 600;
+                                                "
+                                                >Analyze</label
+                                            ><button
+                                                class="hint"
+                                                type="button"
+                                                data-hint="GH · hardness is the dissolved calcium + magnesium (ppm CaCO₃) — the minerals that pull flavour out of coffee. Too low tastes thin and sour, too high harsh and muddy; specialty sweet spot ≈ 17–85. KH · alkalinity is bicarbonate, a buffer that tames coffee's acids — low is bright and sharp, high is flat and chalky; target ≈ 40. TDS is the total dissolved minerals a pen reads; ppmgauge aims ≈ 50–80 ppm. Mg:Ca molar is the magnesium-to-calcium ion ratio — magnesium tastes bright and juicy, calcium heavy and rounding; specialty often runs 2–3 : 1."
+                                            >
+                                                ?
+                                            </button>
+                                            <span
+                                                class="tag calib-status"
+                                                id="calibStatus"
+                                                style="font-size: 0.72rem"
+                                                >modeled (default)</span
+                                            ></span
+                                        >
+                                        <select
+                                            class="input"
+                                            id="chemSource"
+                                            style="max-width: 16rem"
+                                        >
+                                            <option value="single">
+                                                Single water
+                                            </option>
+                                            <option value="a">
+                                                Water A (hot)
+                                            </option>
+                                            <option value="b">
+                                                Water B (cool)
+                                            </option>
+                                            <option value="cup">
+                                                Blended cup (A+B)
+                                            </option>
+                                        </select>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="left">hardness · GH</th>
+                                <th class="left">alkalinity · KH</th>
+                                <th class="left">TDS</th>
+                                <th class="left">Mg:Ca molar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td
+                                    class="left"
+                                    style="border-left: 4px solid var(--rule)"
+                                >
+                                    <b id="chGH">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left">
+                                    <b id="chKH">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left">
+                                    <b id="chTDS">0</b>
+                                    <span class="data">ppm</span>
+                                </td>
+                                <td class="left" id="chMgCa">&ndash;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <div class="two-col">
+                        <table class="ledger">
+                            <thead>
+                                <tr>
+                                    <th class="left">Extraction map</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="left">
+                                        <div id="chemChart" class="plot"></div>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="left">
+                                        <span
+                                            class="cluster gap"
+                                            style="flex-wrap: wrap"
+                                            ><span
+                                                class="tag"
+                                                style="
+                                                    color: var(--text-2);
+                                                    border-color: var(--rule);
+                                                "
+                                                >SCA reference</span
+                                            ><span
+                                                class="tag"
+                                                style="
+                                                    color: var(--warn);
+                                                    border-color: var(--warn);
+                                                "
+                                                >your water</span
+                                            ></span
+                                        >
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <table class="ledger">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="left">
+                                            Ion profile
+                                            <button
+                                                class="hint"
+                                                type="button"
+                                                data-hint="The same water shown as raw ions (mg/L): Ca²⁺ and Mg²⁺ add up to hardness (GH); HCO₃⁻ is alkalinity (KH). They come from each drop's salt breakdown — the stoichiometry is exact, but split quality varies: some are published (e.g. Lotus), others estimated from the label's ingredient order (e.g. Apax). Edit a split in the composition model below, or calibrate against a measured reading."
+                                            >
+                                                ?
+                                            </button>
+                                            <span class="data">mg/L</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Ca&sup2;&#8314; calcium</th>
+                                        <td class="numeric">
+                                            <b id="chCa">0</b> mg/L
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Mg&sup2;&#8314; magnesium</th>
+                                        <td class="numeric">
+                                            <b id="chMg">0</b> mg/L
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>HCO&#8323;&#8315; bicarbonate</th>
+                                        <td class="numeric">
+                                            <b id="chHCO3">0</b> mg/L
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="coachPanel">
+                    <h2 class="heading">
+                        Tasting coach
+                        <button
+                            class="hint"
+                            type="button"
+                            data-hint="Describe how the cup tasted; the coach reads the current water above (GH/KH/ions, calibrated if active) and suggests concrete concentrate moves."
+                        >
+                            ?
+                        </button>
+                    </h2>
+                    <div
+                        id="coachSignedOut"
+                        class="signal info"
+                        style="margin-top: var(--space-3); display: none"
+                    >
+                        Sign in (top-right) to get adjustment suggestions for
+                        how your cup tasted.
+                    </div>
+                    <div
+                        id="coachBody"
+                        style="margin-top: var(--space-3); display: none"
+                    >
+                        <form onsubmit="return false;">
+                            <table
+                                class="ledger"
+                                style="margin: var(--space-3) 0"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="left">
+                                            How did it taste?
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Tasting note</th>
+                                        <td>
+                                            <input
+                                                class="input"
+                                                id="coachNote"
+                                                placeholder="sour and thin, fades fast…"
+                                                style="width: 100%"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr class="action">
+                                        <td
+                                            colspan="2"
+                                            style="
+                                                border-left: 4px solid
+                                                    var(--rule);
+                                            "
+                                        >
+                                            <!-- Phase 3 hybrid: body read from the
+                                                 live calc (WaterLab.context + chem
+                                                 textContent) via hx-vals:js; the
+                                                 server returns an HTML fragment for
+                                                 HX-Request, swapped into #coachOut. -->
+                                            <button
+                                                class="button sm"
+                                                id="coachAsk"
+                                                type="button"
+                                                hx-post="/api/coach"
+                                                hx-target="#coachOut"
+                                                hx-swap="innerHTML"
+                                                hx-vals="js:{note:(document.getElementById('coachNote')||{}).value||'',source:(window.WaterLab?window.WaterLab.context().source:''),target_gl:(window.WaterLab?window.WaterLab.context().gl:0),ratio:(window.WaterLab?(function(){var m=window.WaterLab.context().masses,tot=(m.T+m.J+m.L)||1;return ((m.T/tot)*10).toFixed(1)+':'+((m.J/tot)*10).toFixed(1)+':'+((m.L/tot)*10).toFixed(1);})():''),gh:+((document.getElementById('chGH')||{}).textContent)||0,kh:+((document.getElementById('chKH')||{}).textContent)||0,tds:+((document.getElementById('chTDS')||{}).textContent)||0,ca:+((document.getElementById('chCa')||{}).textContent)||0,mg:+((document.getElementById('chMg')||{}).textContent)||0,hco3:+((document.getElementById('chHCO3')||{}).textContent)||0,mgca:((document.getElementById('chMgCa')||{}).textContent)||''}"
+                                            >
+                                                Get suggestions
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        <div
+                            id="coachOut"
+                            class="stack tight"
+                            style="margin-top: var(--space-3)"
+                        ></div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- MODEL ACCURACY (advanced; separated from the build/brew flow) -->
+            <section id="panel-model">
+                <h2
+                    class="heading"
+                    style="margin: var(--space-5) 0 var(--space-3)"
+                >
+                    Model accuracy
+                    <span class="data" style="font-weight: 400"
+                        >— advanced · tune the predicted numbers to your
+                        bottles</span
+                    >
+                </h2>
+
+                <section id="calibPanel" style="margin-top: var(--space-3)">
+                    <table class="ledger">
+                        <thead>
+                            <tr class="calib-head" style="cursor: pointer">
+                                <th colspan="2" class="left">
+                                    <span
+                                        class="cluster"
+                                        style="
+                                            justify-content: space-between;
+                                            align-items: center;
+                                            gap: var(--space-3);
+                                        "
+                                    >
+                                        <span
+                                            ><span class="dq-arrow">▸</span>
+                                            Calibration
+                                            <button
+                                                class="hint"
+                                                type="button"
+                                                data-hint="The GH/KH above are modeled — estimated from each drop's salt recipe (published splits like Lotus are exact; Apax-style ones are educated guesses). With a TDS pen and GH/KH aquarium test drops you can measure a real batch: make a known recipe, pick its Analyze source, measure it, then Record reading. A few readings across different recipes let Solve calibration fit what your actual bottles deliver — flipping the badge from modeled to calibrated."
+                                            >
+                                                ?
+                                            </button></span
+                                        >
+                                        <span class="tag calib-status"
+                                            >modeled (default)</span
+                                        >
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="calib-collapse" hidden>
+                        <form id="readingForm" onsubmit="return false;">
+                            <table
+                                class="ledger"
+                                style="margin-top: var(--space-2)"
+                            >
+                                <tbody
+                                    id="calibSignedOut"
+                                    style="display: none"
+                                >
+                                    <tr>
+                                        <td
+                                            colspan="2"
+                                            class="left"
+                                            style="
+                                                border-left: 4px solid
+                                                    var(--rule);
+                                            "
+                                        >
+                                            <span class="help"
+                                                >Sign in (top-right) to record
+                                                measurements and calibrate the
+                                                chemistry to your actual
+                                                bottles.</span
+                                            >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody id="calibBody" style="display: none">
+                                    <tr>
+                                        <th>Analyzing</th>
+                                        <td class="data" id="readCtx"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Measured GH
+                                            <span class="data">ppm CaCO₃</span>
+                                        </th>
+                                        <td>
+                                            <input
+                                                class="input numeric"
+                                                type="number"
+                                                id="mGH"
+                                                min="0"
+                                                step="1"
+                                                style="width: 100%"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Measured KH
+                                            <span class="data">ppm CaCO₃</span>
+                                        </th>
+                                        <td>
+                                            <input
+                                                class="input numeric"
+                                                type="number"
+                                                id="mKH"
+                                                min="0"
+                                                step="1"
+                                                style="width: 100%"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Measured TDS
+                                            <span class="data"
+                                                >ppm · optional</span
+                                            >
+                                        </th>
+                                        <td>
+                                            <input
+                                                class="input numeric"
+                                                type="number"
+                                                id="mTDS"
+                                                min="0"
+                                                step="1"
+                                                style="width: 100%"
+                                            />
+                                        </td>
+                                    </tr>
+                                    <tr class="action">
+                                        <td
+                                            colspan="2"
+                                            style="
+                                                border-left: 4px solid
+                                                    var(--rule);
+                                            "
+                                        >
+                                            <button
+                                                class="button sm"
+                                                id="readAdd"
+                                                type="button"
+                                            >
+                                                Record reading
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                        <div
+                            id="calibBody2"
+                            style="display: none; margin-top: var(--space-3)"
+                        >
+                            <table
+                                class="ledger"
+                                style="margin-bottom: var(--space-3)"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="left">
+                                            Readings
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody
+                                    id="readListBody"
+                                    hx-get="/partials/readings"
+                                    hx-trigger="refresh, readings:changed from:body"
+                                    hx-swap="innerHTML"
+                                ></tbody>
+                                <tbody>
+                                    <tr class="action">
+                                        <td
+                                            colspan="3"
+                                            style="
+                                                border-left: 4px solid
+                                                    var(--rule);
+                                            "
+                                        >
+                                            <button
+                                                class="button sm"
+                                                id="calibSolve"
+                                                type="button"
+                                            >
+                                                Solve calibration
+                                            </button>
+                                            <button
+                                                class="button sm secondary"
+                                                id="calibToggle"
+                                                type="button"
+                                            >
+                                                Use default model
+                                            </button>
+                                            <button
+                                                class="button sm secondary"
+                                                id="calibShare"
+                                                type="button"
+                                            >
+                                                Share to community
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div
+                                id="calibDetail"
+                                class="stack tight"
+                                style="margin-bottom: var(--space-3)"
+                            ></div>
+                            <div id="calibPool" class="stack tight"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <div
+                    id="compEditor"
+                    style="
+                        overflow: auto;
+                        padding: var(--space-2) 5px 5px 0;
+                        margin-top: var(--space-3);
+                    "
+                ></div>
+            </section>
+            <!-- /panel-model -->
+
+            <!-- LOGBOOK (top-nav section) -->

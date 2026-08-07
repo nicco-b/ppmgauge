@@ -1,0 +1,9 @@
+# Copy to .dev.vars (gitignored) for local dev: `cp .dev.vars.example .dev.vars`
+# wrangler dev reads .dev.vars automatically.
+
+# Forces auth into dev mode: /auth/login returns the magic link in the JSON
+# response instead of sending an email (no send_email binding locally).
+DEV_EMAIL=1
+
+# Bearer token for scripted /api/ingest bulk loads (any string locally).
+INGEST_TOKEN=local-dev-token

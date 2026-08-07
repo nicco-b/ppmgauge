@@ -1,0 +1,116 @@
+-- seed :: expanded specialty roaster directory -> ref_roasters
+-- Widely-documented specialty roasters from general knowledge — confidence='medium'.
+-- City/country are well-known; treat as a starter directory to verify/expand.
+-- ref_roasters.country_code REFERENCES ref_countries(code) so we add consuming
+-- countries first. INSERT OR IGNORE — never clobbers the 16 already seeded.
+
+
+-- ── Consuming countries not yet present ────────────────────────────
+INSERT OR IGNORE INTO ref_countries (code,name,continent,hemisphere,aliases,updated_at) VALUES
+ ('JP','Japan','Asia','N','[]','2026-06-03'),
+ ('AT','Austria','Europe','N','[]','2026-06-03'),
+ ('CH','Switzerland','Europe','N','[]','2026-06-03'),
+ ('IT','Italy','Europe','N','[]','2026-06-03'),
+ ('FR','France','Europe','N','[]','2026-06-03'),
+ ('BE','Belgium','Europe','N','[]','2026-06-03'),
+ ('IE','Ireland','Europe','N','[]','2026-06-03'),
+ ('FI','Finland','Europe','N','[]','2026-06-03'),
+ ('PT','Portugal','Europe','N','[]','2026-06-03'),
+ ('PL','Poland','Europe','N','[]','2026-06-03'),
+ ('NZ','New Zealand','Oceania','S','[]','2026-06-03'),
+ ('ZA','South Africa','Africa','S','[]','2026-06-03'),
+ ('SG','Singapore','Asia','N','[]','2026-06-03'),
+ ('KR','South Korea','Asia','N','["Korea"]','2026-06-03'),
+ ('TW','Taiwan','Asia','N','[]','2026-06-03'),
+ ('HK','Hong Kong','Asia','N','[]','2026-06-03');
+
+-- ── Roasters ───────────────────────────────────────────────────────
+INSERT OR IGNORE INTO ref_roasters (id,name,city,country_code,website,source,confidence,updated_at) VALUES
+ -- United States
+ ('intelligentsia','Intelligentsia Coffee','Chicago','US','https://www.intelligentsia.com','general_knowledge','medium','2026-06-03'),
+ ('counter-culture','Counter Culture Coffee','Durham','US','https://counterculturecoffee.com','general_knowledge','medium','2026-06-03'),
+ ('stumptown','Stumptown Coffee Roasters','Portland','US','https://www.stumptowncoffee.com','general_knowledge','medium','2026-06-03'),
+ ('blue-bottle','Blue Bottle Coffee','Oakland','US','https://bluebottlecoffee.com','general_knowledge','medium','2026-06-03'),
+ ('verve','Verve Coffee Roasters','Santa Cruz','US','https://www.vervecoffee.com','general_knowledge','medium','2026-06-03'),
+ ('ritual','Ritual Coffee Roasters','San Francisco','US','https://www.ritualcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('coava','Coava Coffee Roasters','Portland','US','https://www.coavacoffee.com','general_knowledge','medium','2026-06-03'),
+ ('ruby','Ruby Coffee Roasters','Nelsonville','US','https://www.rubycoffeeroasters.com','general_knowledge','medium','2026-06-03'),
+ ('madcap','Madcap Coffee Company','Grand Rapids','US','https://madcapcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('metric','Metric Coffee','Chicago','US','https://metriccoffee.com','general_knowledge','medium','2026-06-03'),
+ ('methodical','Methodical Coffee','Greenville','US','https://methodicalcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('huckleberry','Huckleberry Roasters','Denver','US','https://www.huckleberryroasters.com','general_knowledge','medium','2026-06-03'),
+ ('sump','Sump Coffee','St. Louis','US','https://www.sumpcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('pts','PT''s Coffee Roasting','Topeka','US','https://www.ptscoffee.com','general_knowledge','medium','2026-06-03'),
+ ('equator','Equator Coffees','San Rafael','US','https://www.equatorcoffees.com','general_knowledge','medium','2026-06-03'),
+ ('sightglass','Sightglass Coffee','San Francisco','US','https://sightglasscoffee.com','general_knowledge','medium','2026-06-03'),
+ ('devocion','Devoción','Brooklyn','US','https://www.devocion.com','general_knowledge','medium','2026-06-03'),
+ ('partners','Partners Coffee','Brooklyn','US','https://www.partnerscoffee.com','general_knowledge','medium','2026-06-03'),
+ ('cafe-grumpy','Café Grumpy','Brooklyn','US','https://cafegrumpy.com','general_knowledge','medium','2026-06-03'),
+ ('joe-coffee','Joe Coffee Company','New York','US','https://joecoffeecompany.com','general_knowledge','medium','2026-06-03'),
+ ('irving-farm','Irving Farm New York','New York','US','https://www.irvingfarm.com','general_knowledge','medium','2026-06-03'),
+ ('ceremony','Ceremony Coffee Roasters','Annapolis','US','https://ceremonycoffee.com','general_knowledge','medium','2026-06-03'),
+ ('compass','Compass Coffee','Washington','US','https://www.compasscoffee.com','general_knowledge','medium','2026-06-03'),
+ ('temple','Temple Coffee Roasters','Sacramento','US','https://www.templecoffee.com','general_knowledge','medium','2026-06-03'),
+ ('red-rooster','Red Rooster Coffee','Floyd','US','https://www.redroostercoffee.com','general_knowledge','medium','2026-06-03'),
+ ('little-waves','Little Waves Coffee','Durham','US',NULL,'general_knowledge','medium','2026-06-03'),
+ -- United Kingdom & Ireland
+ ('monmouth','Monmouth Coffee Company','London','GB','https://www.monmouthcoffee.co.uk','general_knowledge','medium','2026-06-03'),
+ ('workshop','Workshop Coffee','London','GB','https://workshopcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('has-bean','Has Bean Coffee','Stafford','GB','https://www.hasbean.co.uk','general_knowledge','medium','2026-06-03'),
+ ('origin','Origin Coffee Roasters','Porthleven','GB','https://www.origincoffee.co.uk','general_knowledge','medium','2026-06-03'),
+ ('extract','Extract Coffee Roasters','Bristol','GB','https://extractcoffee.co.uk','general_knowledge','medium','2026-06-03'),
+ ('ozone','Ozone Coffee Roasters','London','GB','https://ozonecoffee.co.uk','general_knowledge','medium','2026-06-03'),
+ ('union','Union Hand-Roasted Coffee','London','GB','https://unionroasted.com','general_knowledge','medium','2026-06-03'),
+ ('caravan','Caravan Coffee Roasters','London','GB','https://www.caravancoffeeroasters.co.uk','general_knowledge','medium','2026-06-03'),
+ ('assembly','Assembly Coffee','London','GB','https://assemblycoffee.co.uk','general_knowledge','medium','2026-06-03'),
+ ('round-hill','Round Hill Roastery','Bath','GB',NULL,'general_knowledge','medium','2026-06-03'),
+ ('3fe','3fe Coffee','Dublin','IE','https://3fe.com','general_knowledge','medium','2026-06-03'),
+ -- Scandinavia & Nordics
+ ('solberg-hansen','Solberg & Hansen','Oslo','NO','https://www.solberghansen.no','general_knowledge','medium','2026-06-03'),
+ ('supreme-roastworks','Supreme Roastworks','Oslo','NO','https://srw.no','general_knowledge','medium','2026-06-03'),
+ ('johan-nystrom','Johan & Nyström','Stockholm','SE','https://www.johanochnystrom.se','general_knowledge','medium','2026-06-03'),
+ ('da-matteo','da Matteo','Gothenburg','SE',NULL,'general_knowledge','medium','2026-06-03'),
+ ('drop-coffee','Drop Coffee','Stockholm','SE','https://www.dropcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('kaffa','Kaffa','Oslo','NO','https://kaffa.no','general_knowledge','medium','2026-06-03'),
+ ('good-life','Good Life Coffee','Helsinki','FI','https://goodlifecoffee.fi','general_knowledge','medium','2026-06-03'),
+ -- Germany, Austria, Switzerland
+ ('five-elephant','Five Elephant','Berlin','DE','https://www.fiveelephant.com','general_knowledge','medium','2026-06-03'),
+ ('bonanza','Bonanza Coffee Roasters','Berlin','DE','https://www.bonanzacoffee.de','general_knowledge','medium','2026-06-03'),
+ ('man-versus-machine','Man Versus Machine','Munich','DE','https://www.mvsm.coffee','general_knowledge','medium','2026-06-03'),
+ ('nano','Nano Kaffee','Vienna','AT',NULL,'general_knowledge','medium','2026-06-03'),
+ ('kaffemik','Kaffemik','Vienna','AT',NULL,'general_knowledge','medium','2026-06-03'),
+ ('stoll','Stoll Kaffee','Zürich','CH',NULL,'general_knowledge','medium','2026-06-03'),
+ ('mame','MAME','Zürich','CH',NULL,'general_knowledge','medium','2026-06-03'),
+ -- Netherlands, Belgium, France, Italy, Iberia, Poland
+ ('white-label','White Label Coffee','Amsterdam','NL',NULL,'general_knowledge','medium','2026-06-03'),
+ ('keen','Keen Coffee','Rotterdam','NL',NULL,'general_knowledge','medium','2026-06-03'),
+ ('mok','MOK Coffee','Leuven','BE','https://mokcoffee.be','general_knowledge','medium','2026-06-03'),
+ ('belleville','Belleville Brûlerie','Paris','FR',NULL,'general_knowledge','medium','2026-06-03'),
+ ('coutume','Coutume Café','Paris','FR',NULL,'general_knowledge','medium','2026-06-03'),
+ ('ditta-artigianale','Ditta Artigianale','Florence','IT','https://www.dittaartigianale.com','general_knowledge','medium','2026-06-03'),
+ ('gardelli','Gardelli Specialty Coffees','Forlì','IT','https://gardellicoffee.com','general_knowledge','medium','2026-06-03'),
+ ('right-side','Right Side Coffee','Barcelona','ES',NULL,'general_knowledge','medium','2026-06-03'),
+ ('nomad','Nomad Coffee','Barcelona','ES','https://nomadcoffee.es','general_knowledge','medium','2026-06-03'),
+ ('hola-coffee','Hola Coffee','Madrid','ES',NULL,'general_knowledge','medium','2026-06-03'),
+ ('fuglen-oslo','Fuglen Coffee Roasters','Oslo','NO',NULL,'general_knowledge','medium','2026-06-03'),
+ -- Australia & New Zealand
+ ('market-lane','Market Lane Coffee','Melbourne','AU','https://marketlane.com.au','general_knowledge','medium','2026-06-03'),
+ ('seven-seeds','Seven Seeds','Melbourne','AU','https://sevenseeds.com.au','general_knowledge','medium','2026-06-03'),
+ ('five-senses','Five Senses Coffee','Perth','AU','https://www.fivesenses.com.au','general_knowledge','medium','2026-06-03'),
+ ('single-o','Single O','Sydney','AU','https://www.singleo.com','general_knowledge','medium','2026-06-03'),
+ ('axil','Axil Coffee Roasters','Melbourne','AU','https://axilcoffee.com.au','general_knowledge','medium','2026-06-03'),
+ ('ona','ONA Coffee','Canberra','AU','https://onacoffee.com.au','general_knowledge','medium','2026-06-03'),
+ ('coffee-supreme','Coffee Supreme','Wellington','NZ','https://www.coffeesupreme.com','general_knowledge','medium','2026-06-03'),
+ ('flight','Flight Coffee','Wellington','NZ',NULL,'general_knowledge','medium','2026-06-03'),
+ -- Asia
+ ('arabica','% Arabica','Kyoto','JP','https://www.arabica.coffee','general_knowledge','medium','2026-06-03'),
+ ('onibus','Onibus Coffee','Tokyo','JP','https://onibuscoffee.com','general_knowledge','medium','2026-06-03'),
+ ('glitch','Glitch Coffee & Roasters','Tokyo','JP','https://glitchcoffee.com','general_knowledge','medium','2026-06-03'),
+ ('nylon','Nylon Coffee Roasters','Singapore','SG','https://nyloncoffee.sg','general_knowledge','medium','2026-06-03'),
+ ('common-man','Common Man Coffee Roasters','Singapore','SG','https://commonmancoffeeroasters.com','general_knowledge','medium','2026-06-03'),
+ ('fritz','Fritz Coffee Company','Seoul','KR',NULL,'general_knowledge','medium','2026-06-03'),
+ ('simple-kaffa','Simple Kaffa','Taipei','TW',NULL,'general_knowledge','medium','2026-06-03'),
+ -- Africa
+ ('truth','Truth Coffee Roasting','Cape Town','ZA','https://truth.coffee','general_knowledge','medium','2026-06-03'),
+ ('rosetta','Rosetta Roastery','Cape Town','ZA','https://rosettaroastery.com','general_knowledge','medium','2026-06-03'),
+ ('father-coffee','Father Coffee','Johannesburg','ZA',NULL,'general_knowledge','medium','2026-06-03');
